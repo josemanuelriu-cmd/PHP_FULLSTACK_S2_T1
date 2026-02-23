@@ -15,22 +15,6 @@ CREATE SCHEMA IF NOT EXISTS `YouTube` DEFAULT CHARACTER SET utf8 ;
 USE `YouTube` ;
 
 -- -----------------------------------------------------
--- Table `YouTube`.`Users`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `YouTube`.`Users` (
-  `idUsers` INT NOT NULL AUTO_INCREMENT,
-  `Email` VARCHAR(100) NOT NULL,
-  `Password` VARCHAR(45) NOT NULL,
-  `UserName` VARCHAR(45) NOT NULL,
-  `Birthdate` DATE NOT NULL,
-  `Gender` VARCHAR(1) NOT NULL,
-  `Country` VARCHAR(45) NOT NULL,
-  `ZipCode` VARCHAR(5) NOT NULL,
-  PRIMARY KEY (`idUsers`))
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
 -- Table `YouTube`.`Videos`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `YouTube`.`Videos` (
@@ -51,13 +35,13 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `YouTube`.`Tags`
+-- Table `YouTube`.`Comments`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `YouTube`.`Tags` (
-  `idTags` INT NOT NULL AUTO_INCREMENT,
-  `Name` VARCHAR(100) NOT NULL,
-  PRIMARY KEY (`idTags`),
-  UNIQUE INDEX `Name_UNIQUE` (`Name` ASC) )
+CREATE TABLE IF NOT EXISTS `YouTube`.`Comments` (
+  `idComment` INT NOT NULL AUTO_INCREMENT,
+  `CommentText` MEDIUMTEXT NOT NULL,
+  `ComentariDate` DATETIME NOT NULL,
+  PRIMARY KEY (`idComment`))
 ENGINE = InnoDB;
 
 
@@ -71,6 +55,54 @@ CREATE TABLE IF NOT EXISTS `YouTube`.`Channels` (
   `CreationDate` DATETIME NOT NULL,
   `IdOwner` INT UNSIGNED NOT NULL,
   PRIMARY KEY (`idChannel`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `YouTube`.`Users`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `YouTube`.`Users` (
+  `idUsers` INT NOT NULL AUTO_INCREMENT,
+  `Email` VARCHAR(100) NOT NULL,
+  `Password` VARCHAR(45) NOT NULL,
+  `UserName` VARCHAR(45) NOT NULL,
+  `Birthdate` DATE NOT NULL,
+  `Gender` VARCHAR(1) NOT NULL,
+  `Country` VARCHAR(45) NOT NULL,
+  `ZipCode` VARCHAR(5) NOT NULL,
+  `Videos_idVideo` INT NOT NULL,
+  `Comments_idComment` INT NOT NULL,
+  `Channels_idChannel` INT NOT NULL,
+  PRIMARY KEY (`idUsers`),
+  INDEX `fk_Users_Videos1_idx` (`Videos_idVideo` ASC) ,
+  INDEX `fk_Users_Comments1_idx` (`Comments_idComment` ASC) ,
+  INDEX `fk_Users_Channels1_idx` (`Channels_idChannel` ASC) ,
+  CONSTRAINT `fk_Users_Videos1`
+    FOREIGN KEY (`Videos_idVideo`)
+    REFERENCES `YouTube`.`Videos` (`idVideo`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Users_Comments1`
+    FOREIGN KEY (`Comments_idComment`)
+    REFERENCES `YouTube`.`Comments` (`idComment`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Users_Channels1`
+    FOREIGN KEY (`Channels_idChannel`)
+    REFERENCES `YouTube`.`Channels` (`idChannel`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `YouTube`.`Tags`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `YouTube`.`Tags` (
+  `idTags` INT NOT NULL AUTO_INCREMENT,
+  `Name` VARCHAR(100) NOT NULL,
+  PRIMARY KEY (`idTags`),
+  UNIQUE INDEX `Name_UNIQUE` (`Name` ASC) )
 ENGINE = InnoDB;
 
 
@@ -90,17 +122,6 @@ CREATE TABLE IF NOT EXISTS `YouTube`.`Playlists` (
     REFERENCES `YouTube`.`Users` (`idUsers`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `YouTube`.`Comments`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `YouTube`.`Comments` (
-  `idComment` INT NOT NULL AUTO_INCREMENT,
-  `CommentText` MEDIUMTEXT NOT NULL,
-  `ComentariDate` DATETIME NOT NULL,
-  PRIMARY KEY (`idComment`))
 ENGINE = InnoDB;
 
 

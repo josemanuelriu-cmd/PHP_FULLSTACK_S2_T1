@@ -150,12 +150,12 @@ DEFAULT CHARACTER SET = utf8mb4;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `pizzeria`.`products` (
   `id_product` INT(11) NOT NULL AUTO_INCREMENT,
-  `product_type` INT(11) NOT NULL,
+  `product_type` ENUM('Pizza', 'Hamburguesa', 'Bebida') NOT NULL,
   `name` VARCHAR(100) NOT NULL,
   `description` LONGTEXT NULL DEFAULT NULL,
   `image` BLOB NULL DEFAULT NULL,
   `price` DECIMAL(10,0) NOT NULL,
-  `pizza_categories_id_pizza_category` INT(11) NOT NULL,
+  `pizza_categories_id_pizza_category` INT(11) NULL,
   PRIMARY KEY (`id_product`, `pizza_categories_id_pizza_category`),
   INDEX `fk_products_pizza_categories1_idx` (`pizza_categories_id_pizza_category` ASC) ,
   CONSTRAINT `fk_products_pizza_categories1`
